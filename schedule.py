@@ -33,7 +33,6 @@ class TrainSchedule(object):
         result = GetRoutesApi().request(OId=src_station, TId=dst_station,
                                         Date=start_date, Hour=start_hour)
         logging.info(result)
-        logging.debug(result.json())
         return result
 
 
