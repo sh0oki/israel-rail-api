@@ -2,25 +2,14 @@ import logging
 import time
 import sys
 
-from israelrailapi.train_station import TrainStationIndex
+from israelrailapi.train_station import translate_station
 from israelrailapi.api import GetRoutesApi
 
 
 class TrainSchedule(object):
-    def __init__(self):
-        self.stations = TrainStationIndex()
-
-    def translate_station(self, station_name):
-        # Station name can be: int (station id), string (station id), string (station name)
-        station_name = str(station_name).lower()
-        if station_name in self.stations.stations:
-            return self.stations.stations[station_name]
-
-        return self.stations.lookup(station_name)
-
     def query(self, src_station, dst_station, start_date=None, start_hour=None):
-        src_station = self.translate_station(src_station)
-        dst_station = self.translate_station(dst_station)
+        src_station = translate_station(src_station)
+        dst_station = translate_station(dst_station)
         if start_date is None:
             start_date = time.strftime("%Y-%m-%d")
         if start_hour is None:

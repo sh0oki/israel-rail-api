@@ -1,8 +1,11 @@
 import israelrailapi.schedule
 import israelrailapi.train_station
 import israelrailapi.api
+try:
+    import israelrailapi.stations
+except ImportError:
+    pass
 
 from .schedule import TrainSchedule
-from .train_station import TrainStationIndex
 
-__all__ = ['TrainSchedule', 'TrainStationIndex']
+__all__ = ['TrainSchedule']
