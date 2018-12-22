@@ -1,5 +1,5 @@
 import unittest
-import train_station
+from israelrailapi import train_station
 
 KNOWN_STATIONS = {'Jerusalem- yitzhak navon': 680, 'Dimona': 7500}
 

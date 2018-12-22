@@ -1,5 +1,5 @@
 import unittest
-import api
+from israelrailapi import api
 
 TEST_API_NAME = 'MyApi'
 TEST_PARAMS = {'required': {},
