@@ -8,7 +8,7 @@ Use this script for checking your own train schedule, integrating with Alexa, an
 ## Installing
 Tested with Python 3.6, should probably work fine with other versions too.
 
-        pip install israelrailapi
+        pip install israel-rail-api
 
 ## Usage
         from israelrailapi.schedule import Schedule
