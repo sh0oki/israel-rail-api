@@ -3,7 +3,6 @@
 
 import json
 import os
-from jsoncomment import JsonComment
 
 from setuptools import setup
 
@@ -11,8 +10,11 @@ from setuptools import setup
 def make_stations():
     with open(os.path.join(os.path.split(__file__)[0], 'stations.txt'),
               'r', encoding='utf8') as station_file:
-        from israelrailapi.train_station import cleanup_name
-        raw = JsonComment(json).load(station_file)['Data']['Data']['CustomPropertys']
+        def cleanup_name(n):
+            n = n.lower().strip().replace('\'', '').replace('-', ' ')
+            return ' '.join(n.split())
+
+        raw = json.load(station_file)['Data']['Data']['CustomPropertys']
         stations = {x.pop('Id'): {l: n[0] for l, n in x.items()} for x in raw}
         # Create reverse dict for indexed query
         station_index = {}
