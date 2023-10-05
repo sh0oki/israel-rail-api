@@ -2,8 +2,8 @@ import logging
 import sys
 import time
 
-from api import GetRoutesApi
-from train_station import translate_station
+from israelrailapi.api import GetRoutesApi
+from israelrailapi.train_station import translate_station
 
 
 class TrainSchedule(object):

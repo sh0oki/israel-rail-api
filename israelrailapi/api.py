@@ -2,7 +2,7 @@ import time
 
 import requests
 
-from train_station import station_name_to_id
+from israelrailapi.train_station import station_name_to_id
 
 # API key bundled in main.js of rail.co.il
 API_KEY = "4b0d355121fe4e0bb3d86e902efe9f20"

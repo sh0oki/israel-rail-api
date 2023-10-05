@@ -33,7 +33,7 @@ make_stations()
 
 setup(
     name='israel-rail-api',
-    version='0.0.4',
+    version='0.1.1',
     packages=['israelrailapi'],
     url='https://github.com/sh0oki/israel-rail-api',
     install_requires=['requests',
