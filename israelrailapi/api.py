@@ -1,29 +1,37 @@
-import requests
 import time
 
-USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 ' \
-             'Safari/537.36'
-API_BASE = 'https://www.rail.co.il/apiinfo/api/Plan'
-DEFAULT_HEADERS = {'User-Agent': USER_AGENT}
+import requests
+
+from train_station import station_name_to_id
+
+# API key bundled in main.js of rail.co.il
+API_KEY = "4b0d355121fe4e0bb3d86e902efe9f20"
+
+USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 ' \
+             'Safari/605.1.15'
+API_BASE = 'https://israelrail.azurefd.net/rjpa-prod/api/v1'
+DEFAULT_HEADERS = {'User-Agent': USER_AGENT,
+                   "ocp-apim-subscription-key": API_KEY}
 
 
 class TrainRoutePart(object):
     def __init__(self, data):
         self.data = data
 
-        self.src = data['OrignStation']
-        self.dst = data['DestinationStation']
-        self.arrival = data['ArrivalTime']
-        self.departure = data['DepartureTime']
-        self.platform = data['Platform']
-        self.dst_platform = data['DestPlatform']
+        self.src = data['orignStation']
+        self.dst = data['destinationStation']
+        self.arrival = data['arrivalTime']
+        self.departure = data['departureTime']
+        self.platform = data['originPlatform']
+        self.dst_platform = data['destPlatform']
 
     @staticmethod
     def parse_time(t):
         return time.strptime(t, "%d/%m/%Y %H:%M:%S")
 
     def __repr__(self):
-        return "%s (%s) to %s (%s)" % (self.src, self.departure, self.dst, self.arrival)
+        return "%s (%s) to %s (%s)" % (
+            station_name_to_id(self.src), self.departure, station_name_to_id(self.dst), self.arrival)
 
 
 class TrainRoute(object):
@@ -48,7 +56,10 @@ class TrainRoute(object):
 
 
 class IsraelRailApi(object):
-    def __init__(self, url, params, headers=DEFAULT_HEADERS):
+    def __init__(self, url, params, headers=None):
+        self.arguments = None
+        if headers is None:
+            headers = DEFAULT_HEADERS
         self.url = '/'.join((API_BASE, url))
         self.params = params
         self.headers = headers
@@ -71,20 +82,26 @@ class IsraelRailApi(object):
         return result
 
     def request(self, **kwargs):
-        arguments = self.prepare_arguments(kwargs)
-        return self.parse(requests.get(self.url, params=arguments, headers=self.headers))
+        self.arguments = self.prepare_arguments(kwargs)
+        return self.parse(requests.get(self.url, params=self.arguments, headers=self.headers))
 
 
 class GetRoutesApi(IsraelRailApi):
     def __init__(self):
-        super().__init__('GetRoutes',
-                         {'OId': {}, 'TId': {},
-                          'Date': {},
-                          'Hour': {'default': '0900'},
-                          'isGoing': {'default': 'true', 'required': False}
+        super().__init__('timetable/searchTrainLuzForDateTime',
+                         {'fromStation': {}, 'toStation': {},
+                          'date': {},
+                          'hour': {'default': '09:00'},
+                          'scheduleType': {'default': 1},
+                          'systemType': {"default": 2},
+                          "languageId": {"default": "English"}
                           })
 
     def parse(self, raw_result):
         raw_result.raise_for_status()
-        routes = raw_result.json()['Data']['Routes']
-        return [TrainRoute(r['Train']) for r in routes]
+        result = raw_result.json()['result']
+        size = result['numOfResultsToShow']
+        index = result['startFromIndex']
+
+        routes = result['travels'][index: index + size]
+        return [TrainRoute(r['trains']) for r in routes]
