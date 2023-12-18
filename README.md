@@ -2,7 +2,9 @@
 
 [![image](https://img.shields.io/pypi/v/israel-rail-api.svg)](https://pypi.org/project/israel-rail-api/)
 [![image](https://img.shields.io/pypi/l/israel-rail-api.svg)](https://pypi.org/project/israel-rail-api/)
-[![Build Status](https://travis-ci.org/sh0oki/israel-rail-api.svg?branch=master)](https://travis-ci.org/sh0oki/israel-rail-api)
+![Build status](https://github.com/sh0oki/israel-rail-api/actions/workflows/test.yml/badge.svg)
+
+
 
 This is a unofficial wrapping of the API of Israeli Rail network in Python.
 
