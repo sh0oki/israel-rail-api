@@ -5,11 +5,11 @@ import requests
 from israelrailapi.train_station import station_name_to_id
 
 # API key bundled in main.js of rail.co.il
-API_KEY = "4b0d355121fe4e0bb3d86e902efe9f20"
+API_KEY = "5e64d66cf03f4547bcac5de2de06b566"
 
 USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 ' \
              'Safari/605.1.15'
-API_BASE = 'https://israelrail.azurefd.net/rjpa-prod/api/v1'
+API_BASE = 'https://rail-api.rail.co.il/rjpa/api/v1'
 DEFAULT_HEADERS = {'User-Agent': USER_AGENT,
                    "ocp-apim-subscription-key": API_KEY}
 
