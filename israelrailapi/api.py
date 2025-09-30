@@ -1,4 +1,5 @@
 import time
+import json
 
 import requests
 
@@ -83,12 +84,22 @@ class IsraelRailApi(object):
 
     def request(self, **kwargs):
         self.arguments = self.prepare_arguments(kwargs)
-        return self.parse(requests.get(self.url, params=self.arguments, headers=self.headers))
+        payload = {
+            "methodName": "searchTrainLuzForDateTime",
+            "fromStation": station_name_to_id(kwargs.get('fromStation')),
+            "toStation": station_name_to_id(kwargs.get('toStation')),
+            "date": kwargs.get('date'),
+            "hour": kwargs.get('hour'),
+            "systemType": "2",
+            "scheduleType": "ByDeparture"
+        }
+
+        return self.parse(requests.post(self.url, json=payload, headers=self.headers))
 
 
 class GetRoutesApi(IsraelRailApi):
     def __init__(self):
-        super().__init__('timetable/searchTrainLuzForDateTime',
+        super().__init__('timetable/searchTrain',
                          {'fromStation': {}, 'toStation': {},
                           'date': {},
                           'hour': {'default': '09:00'},
