@@ -25,9 +25,11 @@ def translate_station(station_name):
     return lookup_station(station_name)
 
 
-def station_name_to_id(station_id, default_language='Eng'):
-    return STATIONS[str(station_id)][default_language]
-
+def station_name_to_id(lookup_name, default_language='Eng'):
+    for station_id in STATIONS:
+        if any(name == str(lookup_name) for name in STATIONS[station_id]):
+            return station_id
+    return lookup_name
 
 if __name__ == '__main__':
     print(STATION_INDEX)
