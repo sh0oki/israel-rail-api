@@ -5,13 +5,18 @@ import requests
 from israelrailapi.train_station import station_name_to_id
 
 # API key bundled in main.js of rail.co.il
-API_KEY = "4b0d355121fe4e0bb3d86e902efe9f20"
+API_KEY = "5e64d66cf03f4547bcac5de2de06b566"
 
-USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 ' \
-             'Safari/605.1.15'
-API_BASE = 'https://israelrail.azurefd.net/rjpa-prod/api/v1'
-DEFAULT_HEADERS = {'User-Agent': USER_AGENT,
-                   "ocp-apim-subscription-key": API_KEY}
+USER_AGENT = (
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 "
+    "Safari/605.1.15"
+)
+API_BASE = "https://rail-api.rail.co.il/rjpa/api/v1"
+DEFAULT_HEADERS = {
+    "User-Agent": USER_AGENT,
+    "ocp-apim-subscription-key": API_KEY,
+    "Content-Type": "application/json",
+}
 
 
 class TrainRoutePart(object):
@@ -83,19 +88,25 @@ class IsraelRailApi(object):
 
     def request(self, **kwargs):
         self.arguments = self.prepare_arguments(kwargs)
-        return self.parse(requests.get(self.url, params=self.arguments, headers=self.headers))
+        return self.parse(
+            requests.post(self.url, json=self.arguments, headers=self.headers)
+        )
 
 
 class GetRoutesApi(IsraelRailApi):
     def __init__(self):
-        super().__init__('timetable/searchTrainLuzForDateTime',
-                         {'fromStation': {}, 'toStation': {},
-                          'date': {},
-                          'hour': {'default': '09:00'},
-                          'scheduleType': {'default': 1},
-                          'systemType': {"default": 2},
-                          "languageId": {"default": "English"}
-                          })
+        super().__init__(
+            "timetable/searchTrain",
+            {
+                "fromStation": {},
+                "toStation": {},
+                "date": {},
+                "hour": {"default": "09:00"},
+                "scheduleType": {"default": "ByDeparture"},
+                "systemType": {"default": "2"},
+                "languageId": {"default": "English"},
+            },
+        )
 
     def parse(self, raw_result):
         raw_result.raise_for_status()
