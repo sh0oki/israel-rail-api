@@ -29,6 +29,10 @@ class TrainRoutePart(object):
         self.departure = data['departureTime']
         self.platform = data['originPlatform']
         self.dst_platform = data['destPlatform']
+        self.departure_delay = next(
+            (e['difMin'] for e in data.get('etaDiffTimes', []) if e['stationId'] == self.src),
+            0,
+        )
 
     @staticmethod
     def parse_time(t):
